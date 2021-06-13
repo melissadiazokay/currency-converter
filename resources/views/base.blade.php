@@ -4,23 +4,20 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>@yield('title')</title>
 
-        <!-- Fonts -->
+        {{-- Fonts --}}
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-        <style type="text/css">
-            body {            
-                color: #fff;
-                background-color: #222;
-            }
-        </style>
+        {{-- Bootstrap --}}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}"> 
 
     </head>
-    <body class="">
+    <body class="@yield('bodyClass')">
 
-        contrlller
+        @yield('content')
 
     </body>
 </html>

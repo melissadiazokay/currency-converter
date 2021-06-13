@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ConvertController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,8 @@ use App\Http\Controllers\HomeController;
 */
 
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [ HomeController::class, 'index' ]);
+
+Route::post('/create', [ ConvertController::class, 'create' ]);
+
+Route::get('/delete/{id}', [ ConvertController::class, 'delete' ]);
