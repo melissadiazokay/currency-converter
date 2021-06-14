@@ -19,9 +19,7 @@ class ConvertController extends Controller {
 
     public function delete($id) {
 
-        $conversion = Conversions::find($id);
-
-        $conversion->delete();
+        Conversions::destroy($id);
 
         return redirect("/");
 

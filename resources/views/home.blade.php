@@ -1,6 +1,6 @@
 @extends('base')
 @section('title','Conversion Calculator')
-@section('bodyClass','homepage')
+
 @section('content')
 
     <h3>Currency Converter</h3>
@@ -11,7 +11,6 @@
         {{ csrf_field() }}
         <button type="submit">Submit</button>
     </div>
-
 
     <h4>Conversions</h4>
     <div style="margin-left:15px;">
@@ -27,3 +26,4 @@
     </div>
 
 @endsection
+

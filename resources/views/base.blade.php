@@ -6,6 +6,11 @@
 
         <title>@yield('title')</title>
 
+        {{-- Vue JS - only render for 'app' route --}}
+        @if (Route::currentRouteName() === 'app') 
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        @endif
+
         {{-- Fonts --}}
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -15,7 +20,7 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}"> 
 
     </head>
-    <body class="@yield('bodyClass')">
+    <body class="view-{{ Route::currentRouteName() }}">
 
         @yield('content')
 
