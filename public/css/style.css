@@ -5,3 +5,8 @@ body {
 input {
     color:  #000;
 }
+.content {
+    margin: 0 auto;
+    display: block;
+    width: 80vw;
+}

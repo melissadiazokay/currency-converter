@@ -8,14 +8,14 @@
 
         {{-- Vue JS - only render for 'app' route --}}
         @if (Route::currentRouteName() === 'app') 
-        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue@next"></script>
         @endif
 
         {{-- Fonts --}}
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
         {{-- Bootstrap --}}
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
         <link rel="stylesheet" href="{{ asset('css/style.css') }}"> 
 
@@ -26,3 +26,4 @@
 
     </body>
 </html>
+
