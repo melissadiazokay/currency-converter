@@ -15,15 +15,13 @@ const app = Vue.createApp({
 
     async getCurrencySymbols() {
 
-      const endpoint = 'https://swop.cx/rest/currencies?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6'
+      // const endpoint = 'https://swop.cx/rest/currencies?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6'
+
+       const endpoint = './assets/currencies.json';
 
       const response = await fetch(endpoint);
-      const data = await response.json();
-      console.log(data)
+      this.currencySymbols = await response.json();
 
-      for(let i=0; i < data.length; i++){
-        this.currencySymbols.push(data[i].code);
-      }      
       console.log(this.currencySymbols);
 
     },
@@ -73,7 +71,7 @@ const app = Vue.createApp({
 // components
 app.component('search-select', {
 
-  props: ['items'],
+  props: ['items'], // an array of key:value objects
 
   /*html*/
   template:
@@ -83,7 +81,7 @@ app.component('search-select', {
 
     <div class="search-select-results" v-show="showSearchResults" >
       <ul>
-        <li v-for="result in searchResults" @click="selectItem(result)" >{{result}}</li>
+        <li v-for="(result, index) in searchResults" @click="selectItem(index)" >{{result.name}} ({{result.symbol}})</li>
       </ul>
     </div>
 
@@ -107,13 +105,13 @@ app.component('search-select', {
 
   methods: {
 
-    selectItem(item) {
+    selectItem(itemIndex) {
 
-      console.log(item)
-      this.searchQuery = item;
+      console.log(itemIndex)
+      this.searchQuery = `${this.searchResults[itemIndex].name} (${this.searchResults[itemIndex].symbol})`;
       this.showSearchResults = false;
 
-      this.$emit('selected-item',item) // emit event
+      this.$emit('selected-item',this.searchResults[itemIndex].symbol) // emit event
 
     },
 
@@ -121,16 +119,24 @@ app.component('search-select', {
 
       this.searchResults = [];
 
-      let query = e.target.value;
+      let query = e.target.value.toLowerCase();
       console.log(query)
 
       if(query.length > 0){
 
         for(let i=0; i < this.items.length; i++){
 
-          if(this.items[i].toLowerCase().includes(query)){ // match!
+          // basic search pattern
+          if(this.items[i].code.toLowerCase().includes(query)
+          || this.items[i].name.toLowerCase().includes(query)){ 
 
-            this.searchResults.push(this.items[i]);
+            // match!
+
+            this.searchResults.push({ 
+              symbol: this.items[i].code,
+              name: this.items[i].name,
+            });
+
             this.showSearchResults = true;
           }
         }
@@ -138,7 +144,6 @@ app.component('search-select', {
       }
 
       console.log(this.searchResults)
-
 
     } 
        

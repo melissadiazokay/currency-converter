@@ -11,7 +11,7 @@
 
             convert from..
 
-            <search-select :items="currencySymbols" @selected-item="selectedFromCurrency" ></search-select>
+            <search-select :items="currencySymbols"  @selected-item="selectedFromCurrency" ></search-select>
 
             to..
 
