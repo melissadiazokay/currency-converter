@@ -10,3 +10,44 @@ input {
     display: block;
     width: 80vw;
 }
+
+.search-select-form-wrapper {
+    position: relative;
+}
+
+.search-select-form-wrapper input.active {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-color: #f0f0f0;
+}
+
+.search-select-form-wrapper input.active.form-control:focus {
+    box-shadow: none;
+    border-color: #f0f0f0;
+}
+
+.search-select-results ul {
+    list-style-type: none;
+    padding: 5px 0 0 0;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    color: #444;
+    z-index: 2;
+    max-height: 80vh;
+    overflow-y: scroll;
+    transition: 350ms;
+}
+
+.search-select-results li {
+    padding: 6px 30px;
+    cursor: pointer;
+    transition: 350ms;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-select-results li:hover {
+    background-color: #f0f0f0;
+}

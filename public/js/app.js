@@ -106,9 +106,9 @@ app.component('search-select', {
 
   /*html*/
   template:
-  `<div>
+  `<div class="search-select-form-wrapper">
 
-    <input class="form-control" v-model="searchQuery" placeholder="Search thing" @keyup="searchOnChangeHandler" />
+    <input class="form-control" :class="{ active: searchResults.length > 0 }" v-model="searchQuery" placeholder="Search thing" @keyup="searchOnChangeHandler"/>
 
     <div class="search-select-results" v-show="showSearchResults" >
       <ul>
@@ -126,7 +126,7 @@ app.component('search-select', {
       searchQuery: '',
       selectedItem: '',
       searchResults: [],
-      showSearchResults: false
+      showSearchResults: false,
     }
   },
 
@@ -140,6 +140,7 @@ app.component('search-select', {
 
       console.log(itemIndex)
       this.searchQuery = `${this.searchResults[itemIndex].name} (${this.searchResults[itemIndex].symbol})`;
+      this.searchResults = [];
       this.showSearchResults = false;
 
       this.$emit('selected-item',this.searchResults[itemIndex].symbol) // emit event
@@ -172,7 +173,7 @@ app.component('search-select', {
           }
         }
 
-      }
+      } else this.showSearchResults = false;
 
       console.log(this.searchResults)
 
