@@ -6,8 +6,11 @@ const app = Vue.createApp({
       numberOfConvertToCurrencyFields: 1,
       showThing: true,
       currencySymbols: [],
-      fromCurrency: '',
-      toCurrency: [],
+      baseCurrency: '',
+      quoteCurrency: [],
+      conversionResults: [],
+      haveError: false,
+      errorMessage: '',
     }
   },
 
@@ -28,27 +31,55 @@ const app = Vue.createApp({
 
     async convert(){
 
-      for(let i=0; i < this.toCurrency.length; i++){
+      this.conversionResults = [];
 
-        let endpoint = `https://swop.cx/rest/rates/${this.fromCurrency}/${this.toCurrency[i]}?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6`
+      for(let i=0; i < this.quoteCurrency.length; i++){
 
-        let response = await fetch(endpoint);
-        let data = await response.json();
-        console.log(data)
+        try {
+
+          console.log('OK')
+
+          let endpoint = `https://swop.cx/rest/rates/${this.baseCurrency}/${this.quoteCurrency[i]}?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6`
+
+          let response = await fetch(endpoint);
+          let data = await response.json();
+          console.log('result',data)
+
+          if(data.error === undefined){ // success!
+
+            this.conversionResults.push(data);
+
+            this.haveError = false;
+
+
+          } else { // API error response
+
+            this.haveError = true;
+            this.errorMessage = data.error.message;
+          } 
+
+        } catch (error){
+
+          console.log('ERROR!!',error)
+          this.haveError = true;
+          this.errorMessage = 'there was an error';
+        }
+
+
       }
 
     },
 
-    selectedFromCurrency(symbol) {
+    selectedBaseCurrency(symbol) {
 
       console.log('selected from',symbol)
-      this.fromCurrency = symbol;
+      this.baseCurrency = symbol;
     },
 
-    selectedToCurrency(symbol) {
+    selectedQuoteCurrency(symbol) {
 
       console.log('selected to',symbol)
-      this.toCurrency.push(symbol);
+      this.quoteCurrency.push(symbol);
     }
 
   },
