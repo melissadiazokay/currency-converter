@@ -9,8 +9,10 @@ const app = Vue.createApp({
       quoteCurrency: [],
       quoteCurrencyFields: [0],
       conversionResults: [],
+      showResults: false,
       haveError: false,
-      errorMessage: '',
+      errorMessage: '&nbsp;',
+      amountBaseCurrency: 1
     }
   },
 
@@ -37,8 +39,6 @@ const app = Vue.createApp({
 
         try {
 
-          console.log('OK')
-
           let endpoint = `https://swop.cx/rest/rates/${this.baseCurrency}/${this.quoteCurrency[i]}?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6`
 
           let response = await fetch(endpoint);
@@ -47,25 +47,39 @@ const app = Vue.createApp({
 
           if(data.error === undefined){ // success!
 
+            data['computed_quote'] = data.quote * this.amountBaseCurrency;
+
             this.conversionResults.push(data);
-
+            this.showResults = true;
             this.haveError = false;
-
 
           } else { // API error response
 
-            this.haveError = true;
             this.errorMessage = data.error.message;
+            this.haveError = true;
           } 
 
         } catch (error){
 
-          console.log('ERROR!!',error)
-          this.haveError = true;
           this.errorMessage = 'there was an error';
+          this.haveError = true;
         }
 
+        if(this.haveError){ // hide error message after 3s
+          this.showResults = false;
+          setTimeout(function () { this.haveError = false }.bind(this), 3000)
+        }
 
+      }
+
+    },
+
+    getSymbolName(symbol){
+
+      for(let i=0; i < this.currencySymbols.length; i++){
+        if(this.currencySymbols[i].code == symbol){
+          return this.currencySymbols[i].name;
+        }
       }
 
     },

@@ -3,18 +3,14 @@ body {
     background-color: #222;
 }
 input {
-    color:  #000;
+    color: #000;
 }
-
-.flex {
-    display: flex;
-}
-.flex-align-middle {
-    align-items: center;
+label {
+    color: #ddd;
 }
 
 .container {
-    margin-top: 50px;
+
 }
 
 .content {
@@ -50,7 +46,7 @@ input {
     background-color: #fff;
     color: #444;
     z-index: 2;
-    max-height: 80vh;
+    max-height: 400px;
     overflow-y: scroll;
     transition: 350ms;
 }
@@ -67,22 +63,37 @@ input {
 }
 
 .delete-icon {
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin-top: -3px;
-    margin-left: 5px;
+    margin-right: -30px;
+    padding-left: 15px;
     cursor: pointer;
 }
 
 .btn {
     min-width: 140px;
 }
+.btn-sm {
+    min-width: auto;
+}
 
 /* custom invert button */
 .btn.btn-invert {
     color: #fdfdfd;
     border: 1px solid #fdfdfd;
+    background-color: transparent;
 }
 .btn.btn-invert:hover {
     background-color: #fdfdfd;
     color: #222;
+}
+
+.btn.convert-btn {
+    color: #fff !important;
+    background-color: #009ddb;
+    border: 2px solid #009ddb;
+}
+.btn.convert-btn:hover {
+    background-color: #11acea;
+    border-color: #11acea;
 }
