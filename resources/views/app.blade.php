@@ -7,10 +7,12 @@
 
     <div id="app" >
 
+        <modal :toggle="modalToggle" @modal-close="modalToggle = !modalToggle"></modal>
+
         <div class="container-fluid hero">
 
-            <div class="text-right">
-                <button class="btn btn-invert mt-2">Login</button>
+            <div v-show="!showLoginButton" class="text-right">
+                <button class="btn btn-invert mt-2" @click="modalToggle = !modalToggle">Login</button>
             </div>
 
             <div class="title"><h1>Currency Converter</h1></div>          
@@ -37,7 +39,7 @@
 
                         <label class="mb-1"><strong>From</strong></label>
 
-                        <search-select :items="currencySymbols" :placeholder="'Choose base currency'" @selected-item="  selectedBaseCurrency" ></search-select>
+                        <search-select :items="currencySymbols" :placeholder="'Choose base currency'" @selected-item="selectedBaseCurrency" ></search-select>
 
                     </div>
 
@@ -86,12 +88,6 @@
             </div>
 
         </div>
-
-        <div class="container conversion-results">
-
- 
-        </div>
-
 
     </div>
 

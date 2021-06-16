@@ -3,7 +3,6 @@ const app = Vue.createApp({
   data() {
 
     return {
-      showThing: true,
       currencySymbols: [],
       baseCurrency: '',
       quoteCurrency: [],
@@ -13,7 +12,9 @@ const app = Vue.createApp({
       haveError: false,
       haveWarning: false,
       errorMessage: '&nbsp;',
-      amountBaseCurrency: 1
+      amountBaseCurrency: 1,
+      modalToggle: false,
+      loggedIn: false
     }
   },
 
@@ -52,7 +53,6 @@ const app = Vue.createApp({
 
           let response = await fetch(endpoint);
           let data = await response.json();
-          console.log('result',data)
 
           if(data.error === undefined){ // success!
 
@@ -94,13 +94,11 @@ const app = Vue.createApp({
 
     selectedBaseCurrency(selectedCurrencyObj) {
 
-      console.log('selected base:',selectedCurrencyObj)
       this.baseCurrency = selectedCurrencyObj.symbol;
     },
 
     selectedQuoteCurrency(selectedCurrencyObj) {
 
-      console.log('selected quote:',selectedCurrencyObj)
       this.quoteCurrency[selectedCurrencyObj.id] = selectedCurrencyObj.symbol;
     },
 
@@ -109,7 +107,7 @@ const app = Vue.createApp({
       if(this.quoteCurrencyFields.length >= 10) {
         this.haveWarning = true;
         this.errorMessage = "Maximum number of quote currency fields is 10.";
-        this.errorTimeout();
+        this.errorTimeout(4000);
         return;
       }
 
@@ -121,17 +119,21 @@ const app = Vue.createApp({
         this.quoteCurrencyFields.splice(index, 1);
     },
 
-    errorTimeout(){
+    errorTimeout(delay = 3000){
       setTimeout(function () {
         this.haveError = false; 
         this.haveWarning = false 
-      }.bind(this), 3000)
-    }
+      }.bind(this), delay)
+    },
 
   },
 
   computed: {
 
+    showLoginButton(){
+
+      return this.loggedIn;
+    }
   },
 
   mounted() {
@@ -140,12 +142,68 @@ const app = Vue.createApp({
     this.getCurrencySymbols()
 
   },
-
   
 });
 
+/* Components */
 
-// components
+// modal component
+app.component('modal',{
+
+  props: ['toggle'],
+
+  /*html*/
+  template: 
+  `<div class="modal fade" :class="{ active: toggle }" >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title" >Login</h5>
+            <div class="modal-subtitle">Enter your email address to retrieve saved conversions</div>
+          </div>
+          <button type="button" class="close" @click="modalClose" >
+            <span aria-hidden="true">&times;</span>
+          
+          </button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control" v-model="email" placeholder="" />
+          <div class="text-right mt-2">
+            <button class="btn btn-invert" type="email" @click="submit">Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`,
+
+  data(){
+
+    return {
+      active: false,
+      email: ''
+    }
+  },
+
+  methods: {
+
+    modalClose(){
+
+      this.$emit('modal-close');
+    },
+
+    submit(){
+
+      console.log(this.email)
+
+      // this.modalClose()
+    }
+
+  },
+
+});
+
+// search select component
 app.component('search-select', {
 
   props: {
@@ -199,10 +257,6 @@ app.component('search-select', {
 
     selectItem(itemIndex) {
 
-      console.log(itemIndex)
-
-      console.log(this.searchResults)
-
       this.searchQuery = `${this.searchResults[itemIndex].name} (${this.searchResults[itemIndex].symbol})`;
 
       this.$emit('selected-item',{
@@ -215,18 +269,21 @@ app.component('search-select', {
 
     searchOnChangeHandler(e) {
 
-      console.log('target:',e.target)
-
       this.searchResults = [];
 
-      // if close icon clicked, allow above line to set searchResults to empty array, which will trigger computed property to close search options, then return
+      // if close icon clicked, return from function with @searchResult empty, which will allow computed property @showSearchResults to be set accordingly
       if(e.target.classList.contains('fa-times')){
         return;
       }
 
-      let query = e.target.value ? e.target.value.toLowerCase(): '';
-      console.log(query)
+      const query = e.target.value ? e.target.value.toLowerCase() : '';
 
+      // handle case where user backspaces to clear the input field; search results dropdown should close automatically
+      if(e.keyCode == 8 && query.length == 0){
+        return;
+      }
+
+      // loop through items and return matching entries
       for(let i=0; i < this.items.length; i++){
 
         if(query.length > 0){
@@ -235,7 +292,7 @@ app.component('search-select', {
           if(this.items[i].code.toLowerCase().includes(query)
           || this.items[i].name.toLowerCase().includes(query)){ 
 
-            // match!
+            // MATCH!
 
             this.searchResults.push({ 
               symbol: this.items[i].code,
@@ -254,15 +311,10 @@ app.component('search-select', {
 
       }
 
-      
-
-      console.log(this.searchResults)
-
     } 
        
   },
 
 });
-
 
 const mountedApp = app.mount('#app');

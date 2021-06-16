@@ -128,7 +128,7 @@ label {
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    top: 40%;
+    top: 35%;
 }
 .title h1{
     text-shadow: 2px 2px #174b9b;
@@ -148,4 +148,40 @@ label {
 }
 .input-field input {
     /*position: absolute;*/
+}
+
+
+
+
+
+
+
+
+/* modal */
+.modal {
+    background-color: rgba(0,0,0,0.75);
+    transition: opacity 300ms;
+}
+.modal.active {
+    display: block;
+    opacity: 1;
+}
+.modal-subtitle {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+.modal-content {
+    background-color: #1c1c1c;
+    border: 1px solid #222;
+}
+.modal-content .close,
+.modal-content .close:not(:disabled):not(.disabled):focus, 
+.modal-content .close:not(:disabled):not(.disabled):hover {
+    color: #fff;
+}
+.modal-header {
+    border-bottom-color: #4a4a4a;
+}
+.modal-title {
+    color: #e6e6e6;
 }
