@@ -3,11 +3,11 @@ const app = Vue.createApp({
   data() {
 
     return {
-      numberOfConvertToCurrencyFields: 1,
       showThing: true,
       currencySymbols: [],
       baseCurrency: '',
       quoteCurrency: [],
+      quoteCurrencyFields: [0],
       conversionResults: [],
       haveError: false,
       errorMessage: '',
@@ -70,16 +70,26 @@ const app = Vue.createApp({
 
     },
 
-    selectedBaseCurrency(symbol) {
+    selectedBaseCurrency(selectedCurrencyObj) {
 
-      console.log('selected from',symbol)
-      this.baseCurrency = symbol;
+      console.log('selected base:',selectedCurrencyObj)
+      this.baseCurrency = selectedCurrencyObj.symbol;
     },
 
-    selectedQuoteCurrency(symbol) {
+    selectedQuoteCurrency(selectedCurrencyObj) {
 
-      console.log('selected to',symbol)
-      this.quoteCurrency.push(symbol);
+      console.log('selected quote:',selectedCurrencyObj)
+      this.quoteCurrency[selectedCurrencyObj.id] = selectedCurrencyObj.symbol;
+    },
+
+    addQuoteCurrencyField(){
+
+      this.quoteCurrencyFields.push(this.quoteCurrencyFields.length)
+    },
+
+    removeQuoteCurrencyField(index){
+
+        this.quoteCurrencyFields.splice(index, 1);
     }
 
   },
@@ -102,13 +112,18 @@ const app = Vue.createApp({
 // components
 app.component('search-select', {
 
-  props: ['items'], // an array of key:value objects
+  props: {
+    id: Number, 
+    items: Array,
+    placeholder: String
+  }, 
 
   /*html*/
   template:
-  `<div class="search-select-form-wrapper">
 
-    <input class="form-control" :class="{ active: searchResults.length > 0 }" v-model="searchQuery" placeholder="Search thing" @keyup="searchOnChangeHandler"/>
+  `<div :id="'search-select-' + this.id" class="search-select">
+
+    <input class="form-control" :class="{ active: searchResults.length > 0 }" :placeholder="this.placeholder" v-model="searchQuery" @keyup="searchOnChangeHandler"/>
 
     <div class="search-select-results" v-show="showSearchResults" >
       <ul>
@@ -126,11 +141,15 @@ app.component('search-select', {
       searchQuery: '',
       selectedItem: '',
       searchResults: [],
-      showSearchResults: false,
     }
   },
 
   computed: {
+
+    showSearchResults(){
+
+      return this.searchResults.length > 0
+    }
 
   },
 
@@ -139,12 +158,17 @@ app.component('search-select', {
     selectItem(itemIndex) {
 
       console.log(itemIndex)
+
+      console.log(this.searchResults)
+
       this.searchQuery = `${this.searchResults[itemIndex].name} (${this.searchResults[itemIndex].symbol})`;
+
+      this.$emit('selected-item',{
+        id: this.id,
+        symbol: this.searchResults[itemIndex].symbol
+      }) // emit event
+
       this.searchResults = [];
-      this.showSearchResults = false;
-
-      this.$emit('selected-item',this.searchResults[itemIndex].symbol) // emit event
-
     },
 
     searchOnChangeHandler(e) {
@@ -169,11 +193,10 @@ app.component('search-select', {
               name: this.items[i].name,
             });
 
-            this.showSearchResults = true;
           }
         }
 
-      } else this.showSearchResults = false;
+      } 
 
       console.log(this.searchResults)
 

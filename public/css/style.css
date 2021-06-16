@@ -5,23 +5,37 @@ body {
 input {
     color:  #000;
 }
+
+.flex {
+    display: flex;
+}
+.flex-align-middle {
+    align-items: center;
+}
+
+.container {
+    margin-top: 50px;
+}
+
 .content {
     margin: 0 auto;
     display: block;
     width: 80vw;
 }
 
-.search-select-form-wrapper {
+.search-select {
     position: relative;
+    margin-bottom: 3px;
+    width: 100%;
 }
 
-.search-select-form-wrapper input.active {
+.search-select input.active {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     border-bottom-color: #f0f0f0;
 }
 
-.search-select-form-wrapper input.active.form-control:focus {
+.search-select input.active.form-control:focus {
     box-shadow: none;
     border-color: #f0f0f0;
 }
@@ -50,4 +64,25 @@ input {
 
 .search-select-results li:hover {
     background-color: #f0f0f0;
+}
+
+.delete-icon {
+    font-size: 1.5em;
+    margin-top: -3px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.btn {
+    min-width: 140px;
+}
+
+/* custom invert button */
+.btn.btn-invert {
+    color: #fdfdfd;
+    border: 1px solid #fdfdfd;
+}
+.btn.btn-invert:hover {
+    background-color: #fdfdfd;
+    color: #222;
 }

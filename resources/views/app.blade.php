@@ -7,30 +7,37 @@
 
     <div id="app" >
 
-        <div class="content">
+        <div class="container">
 
-            convert from..
+            <div class="content">
 
-            <search-select :items="currencySymbols"  @selected-item="selectedBaseCurrency" ></search-select>
+                convert from..
 
-            to..
+                <search-select :items="currencySymbols" :placeholder="'Choose base currency'" @selected-item="selectedBaseCurrency" ></search-select>
 
-            <search-select :items="currencySymbols" @selected-item="selectedQuoteCurrency" v-for="i in numberOfConvertToCurrencyFields" ></search-select>
+                to..
 
-            <br>
+                <div v-for="(i, index) in quoteCurrencyFields" class="flex flex-align-middle">
+                    <search-select :id="index" :items="currencySymbols" :placeholder="'Choose quote currency'" @selected-item="selectedQuoteCurrency" ></search-select>
+                    <span v-if="index > 0" class="delete-icon text-danger" @click="removeQuoteCurrencyField(index)" >&times;</span>
+                </div>
 
-            <button class="btn btn-light" @click="numberOfConvertToCurrencyFields++" >+ add currency</button>
-            <br><br>
-            <button class="btn btn-primary" @click="convert" >Convert</button>
+                <button class="btn btn-invert" @click="addQuoteCurrencyField" >+ add currency</button>
 
-            <br>
-            <div v-show="haveError" class="text-error">{{errorMessage}}</div>
+                <br><br>
 
-            <br><br>
+                <button class="btn btn-primary" @click="convert" >Convert</button>
 
-            <div class="conversion-results">
-                
-                <div v-for="result in conversionResults">{{result.base_currency}} --> {{result.quote_currency}} : {{result.quote}}</div>
+                <br>
+                <div v-show="haveError" class="text-danger">{{errorMessage}}</div>
+
+                <br><br>
+
+                <div class="conversion-results">
+                    
+                    <div v-for="result in conversionResults">{{result.base_currency}} --> {{result.quote_currency}} : {{result.quote}}</div>
+
+                </div>
 
             </div>
 
