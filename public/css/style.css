@@ -1,6 +1,8 @@
 body {
     color: #fff;
-    background-color: #222;
+    background-color: #1a1a1a;
+    margin: 0;
+    padding: 0;
 }
 input {
     color: #000;
@@ -9,9 +11,16 @@ label {
     color: #ddd;
 }
 
-.container {
-
+.form-container {
+    background-color: #202020;
+    border-radius: 10px;
+    transition: height 300ms;
+    margin-top: -9vh;
+    z-index: 2;
+    position: relative;
+    border: 1px solid #282828;
 }
+
 
 .content {
     margin: 0 auto;
@@ -48,18 +57,26 @@ label {
     z-index: 2;
     max-height: 400px;
     overflow-y: scroll;
-    transition: 350ms;
 }
 
 .search-select-results li {
     padding: 6px 30px;
     cursor: pointer;
-    transition: 350ms;
+    transition: background-color 350ms;
     border-bottom: 1px solid #f0f0f0;
 }
 
 .search-select-results li:hover {
     background-color: #f0f0f0;
+}
+
+.result-base-currency {
+    font-size: 1.2rem;
+    color: #b9b8b8;
+    font-weight: 600;
+}
+.result-quote-currency {
+    font-size: 1.5rem;
 }
 
 .delete-icon {
@@ -96,4 +113,39 @@ label {
 .btn.convert-btn:hover {
     background-color: #11acea;
     border-color: #11acea;
+}
+
+.hero {
+    height: 40vh;
+    background-image: url('../assets/bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: relative;
+}
+.title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    top: 40%;
+}
+.title h1{
+    text-shadow: 2px 2px #174b9b;
+}
+
+.input-field {
+    position: relative;
+}
+.input-field i {
+    position: absolute;
+    z-index: 2;
+    color: #626262;
+    cursor: pointer;
+    right: .5rem;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.input-field input {
+    /*position: absolute;*/
 }

@@ -11,6 +11,7 @@ const app = Vue.createApp({
       conversionResults: [],
       showResults: false,
       haveError: false,
+      haveWarning: false,
       errorMessage: '&nbsp;',
       amountBaseCurrency: 1
     }
@@ -34,6 +35,14 @@ const app = Vue.createApp({
     async convert(){
 
       this.conversionResults = [];
+
+      if(this.baseCurrency == '') {
+        this.errorMessage = "Please choose a base currency.";
+        this.haveWarning = true;
+      } else if(this.quoteCurrency.length == 0) {
+        this.errorMessage = "Please choose at least one quote currency.";
+        this.haveWarning = true;
+      }
 
       for(let i=0; i < this.quoteCurrency.length; i++){
 
@@ -59,17 +68,16 @@ const app = Vue.createApp({
             this.haveError = true;
           } 
 
-        } catch (error){
-
+        } catch (error){ 
           this.errorMessage = 'there was an error';
           this.haveError = true;
         }
 
-        if(this.haveError){ // hide error message after 3s
-          this.showResults = false;
-          setTimeout(function () { this.haveError = false }.bind(this), 3000)
-        }
+      }
 
+      if(this.haveError || this.haveWarning){ // hide error message after 3s
+        this.showResults = false;
+        this.errorTimeout();
       }
 
     },
@@ -98,12 +106,26 @@ const app = Vue.createApp({
 
     addQuoteCurrencyField(){
 
+      if(this.quoteCurrencyFields.length >= 10) {
+        this.haveWarning = true;
+        this.errorMessage = "Maximum number of quote currency fields is 10.";
+        this.errorTimeout();
+        return;
+      }
+
       this.quoteCurrencyFields.push(this.quoteCurrencyFields.length)
     },
 
     removeQuoteCurrencyField(index){
 
         this.quoteCurrencyFields.splice(index, 1);
+    },
+
+    errorTimeout(){
+      setTimeout(function () {
+        this.haveError = false; 
+        this.haveWarning = false 
+      }.bind(this), 3000)
     }
 
   },
@@ -137,7 +159,13 @@ app.component('search-select', {
 
   `<div :id="'search-select-' + this.id" class="search-select">
 
-    <input class="form-control" :class="{ active: searchResults.length > 0 }" :placeholder="this.placeholder" v-model="searchQuery" @keyup="searchOnChangeHandler"/>
+    <div class="input-field">
+
+      <i class="fa" :class="{ 'fa-times': this.showSearchResults, 'fa-chevron-down': !this.showSearchResults }" @click="searchOnChangeHandler" ></i>
+
+      <input class="form-control" :class="{ active: searchResults.length > 0 }" :placeholder="this.placeholder" v-model="searchQuery" @keyup="searchOnChangeHandler" @click="searchOnChangeHandler" />
+
+    </div>
 
     <div class="search-select-results" v-show="showSearchResults" >
       <ul>
@@ -187,14 +215,21 @@ app.component('search-select', {
 
     searchOnChangeHandler(e) {
 
+      console.log('target:',e.target)
+
       this.searchResults = [];
 
-      let query = e.target.value.toLowerCase();
+      // if close icon clicked, allow above line to set searchResults to empty array, which will trigger computed property to close search options, then return
+      if(e.target.classList.contains('fa-times')){
+        return;
+      }
+
+      let query = e.target.value ? e.target.value.toLowerCase(): '';
       console.log(query)
 
-      if(query.length > 0){
+      for(let i=0; i < this.items.length; i++){
 
-        for(let i=0; i < this.items.length; i++){
+        if(query.length > 0){
 
           // basic search pattern
           if(this.items[i].code.toLowerCase().includes(query)
@@ -208,9 +243,18 @@ app.component('search-select', {
             });
 
           }
+
+        } else { // for empty query, show all results. this handles case when user initally clicks on input field
+
+          this.searchResults.push({ 
+            symbol: this.items[i].code,
+            name: this.items[i].name,
+          });
         }
 
-      } 
+      }
+
+      
 
       console.log(this.searchResults)
 

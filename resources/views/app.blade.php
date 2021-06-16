@@ -7,81 +7,89 @@
 
     <div id="app" >
 
-        <div class="container">
+        <div class="container-fluid hero">
 
-          <nav class="navbar navbar-expand-lg px-0 pb-0">
-            <span class="navbar-brand">Currency Converter</span>
-          </nav>
+            <div class="text-right">
+                <button class="btn btn-invert mt-2">Login</button>
+            </div>
+
+            <div class="title"><h1>Currency Converter</h1></div>          
 
         </div>
 
-        <div class="container">
+        <div class="container" :class="{ active: showResults }">
 
-            <div :class="{invisible: !haveError}" class="text-danger">{{errorMessage}}</div>
+            <div class="form-container pb-4 pt-3 px-3">
 
-            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div class="pl-1 pb-2" :class="{ invisible: !haveError && !haveWarning, 'text-danger': haveError, 'text-warning': haveWarning }" >{{errorMessage}}</div>
 
-                <div class="pr-1" style="flex-grow: 0;">
+                <div class="row mx-0">
 
-                    <label class="mb-1"><strong>Amount</strong></label>
+                    <div class="col-md-3 px-1">
 
-                    <input v-model="amountBaseCurrency" type="number" min="1" class="form-control">
+                        <label class="mb-1"><strong>Amount</strong></label>
 
-                </div>
-
-                <div class="px-1" style="flex-grow: 2;">
-
-                    <label class="mb-1"><strong>From</strong></label>
-
-                    <search-select :items="currencySymbols" :placeholder="'Choose base currency'" @selected-item="  selectedBaseCurrency" ></search-select>
-
-                </div>
-
-                <div class="pl-1" style="flex-grow: 2;"> 
-
-                    <label class="mb-1"><strong>To</strong></label>
-
-                    <div class="d-flex">
-
-                        <div class="pr-2" style="flex-grow: 1;">
-                            <div v-for="(i, index) in quoteCurrencyFields" class="d-flex align-items-center">
-                                <search-select :id="index" :items="currencySymbols" :placeholder="'Choose quote currency'" @selected-item="selectedQuoteCurrency" ></search-select>
-                                <span v-if="index > 0" class="delete-icon text-danger" @click="removeQuoteCurrencyField(index)" >&times;</span>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-sm btn-invert align-self-stretch" style="width: 45px; height: 38px;" @click="addQuoteCurrencyField" >+</button>
+                        <input v-model="amountBaseCurrency" type="number" min="1" class="form-control">
 
                     </div>
 
-                </div> 
+                    <div class="col-md-4 px-1" >
 
-            </div>
+                        <label class="mb-1"><strong>From</strong></label>
 
-            <div class="text-right">
-                <button class="btn btn-invert convert-btn" @click="convert" >Convert</button>
+                        <search-select :items="currencySymbols" :placeholder="'Choose base currency'" @selected-item="  selectedBaseCurrency" ></search-select>
+
+                    </div>
+
+                    <div class="col-md px-1" > 
+
+                        <label class="mb-1"><strong>To</strong></label>
+
+                        <div class="d-flex">
+
+                            <div class="pr-2" style="flex-grow: 1;">
+                                <div v-for="(i, index) in quoteCurrencyFields" class="d-flex align-items-center">
+                                    <search-select :id="index" :items="currencySymbols" :placeholder="'Choose quote currency'" @selected-item="selectedQuoteCurrency" ></search-select>
+                                    <span v-if="index > 0" class="delete-icon" @click="removeQuoteCurrencyField(index)" >&times;</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-sm btn-invert align-self-stretch" style="width: 45px; height: 38px;" @click="addQuoteCurrencyField" >+</button>
+
+                        </div>
+
+                    </div> 
+
+                </div>
+
+                <div class="text-right pr-1 mt-2">
+                    <button class="btn btn-invert convert-btn" @click="convert" >Convert</button>
+                </div>
+
+                <!-- Results -->
+                <div class="results-container pl-2" v-show="showResults">
+
+                    <div class="result-base-currency">
+                        
+                       {{amountBaseCurrency}} {{this.getSymbolName(baseCurrency) + ' (' + baseCurrency + ')'}} =
+
+                    </div>
+                        
+                    <div v-for="result in conversionResults" class="result-quote-currency">
+
+                       {{result.computed_quote}} {{this.getSymbolName(result.quote_currency) + ' (' + result.quote_currency + ')' }}
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
         <div class="container conversion-results">
 
-            <div v-show="showResults">
-
-                <div>
-                    
-                   {{amountBaseCurrency}} {{baseCurrency}} =
-
-                </div>
-                    
-                <div v-for="result in conversionResults">
-
-                   {{result.computed_quote}} {{this.getSymbolName(result.quote_currency) + ' (' + result.quote_currency + ')' }}
-
-                </div>
-
-            </div>
-
+ 
         </div>
 
 
