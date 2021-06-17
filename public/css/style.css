@@ -151,7 +151,12 @@ label {
 }
 
 
-
+a.link {
+    color: #0ff0bb !important;
+}
+.pointer {
+    cursor: pointer;
+}
 
 
 

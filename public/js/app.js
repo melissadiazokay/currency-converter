@@ -14,7 +14,8 @@ const app = Vue.createApp({
       errorMessage: '&nbsp;',
       amountBaseCurrency: 1,
       modalToggle: false,
-      loggedIn: false
+      loggedIn: false,
+      loggedInEmail: ''
     }
   },
 
@@ -126,19 +127,42 @@ const app = Vue.createApp({
       }.bind(this), delay)
     },
 
+    logInSuccess(loginSuccessObj){
+
+      console.log('loginSuccessObj:',loginSuccessObj);
+
+      localStorage.setItem("loggedInEmail", loginSuccessObj.email);
+      this.loggedInEmail = loginSuccessObj.email;
+      this.loggedIn = true;
+    },
+
+    checkLogin(){
+
+      const loggedInEmail = localStorage.getItem("loggedInEmail");
+      if(loggedInEmail) {
+        this.loggedInEmail = loggedInEmail;
+        this.loggedIn = true;
+      }
+    },
+
+    logout(){
+
+      localStorage.removeItem('loggedInEmail');
+      this.loggedInEmail = '';
+      this.loggedIn = false;
+    }
+
   },
 
   computed: {
 
-    showLoginButton(){
-
-      return this.loggedIn;
-    }
   },
 
   mounted() {
       
-    console.log('appp mounted')
+    console.log('app mounted')
+
+    this.checkLogin()
     this.getCurrencySymbols()
 
   },
@@ -148,13 +172,13 @@ const app = Vue.createApp({
 /* Components */
 
 // modal component
-app.component('modal',{
+app.component('login-modal',{
 
   props: ['toggle'],
 
   /*html*/
   template: 
-  `<div class="modal fade" :class="{ active: toggle }" >
+  `<div class="modal fade" :class="{ active: modalOpen }" >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -164,11 +188,11 @@ app.component('modal',{
           </div>
           <button type="button" class="close" @click="modalClose" >
             <span aria-hidden="true">&times;</span>
-          
           </button>
         </div>
-        <div class="modal-body">
-          <input class="form-control" v-model="email" placeholder="" />
+        <div class="modal-body pt-1">
+          <div :class="{ invisible: !haveError }" class="pb-1 text-warning" >{{errorMessage}}</div>
+          <input class="form-control" v-model="email" @keyup.enter="submit" />
           <div class="text-right mt-2">
             <button class="btn btn-invert" type="email" @click="submit">Login</button>
           </div>
@@ -181,8 +205,20 @@ app.component('modal',{
 
     return {
       active: false,
-      email: ''
+      email: '',
+      haveError: false,
+      errorMessage: '&nbsp;'
     }
+  },
+
+  computed: {
+
+    modalOpen(){
+
+      this.email = '';
+      return this.toggle;
+    }
+
   },
 
   methods: {
@@ -192,11 +228,28 @@ app.component('modal',{
       this.$emit('modal-close');
     },
 
+    validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    },
+
     submit(){
 
-      console.log(this.email)
+      if(this.email.length > 0 && this.validateEmail(this.email)){
 
-      // this.modalClose()
+        this.$emit('log-in-success',{
+          email: this.email,
+          conversions: []
+        });
+        
+        this.modalClose()
+
+      } else {
+
+        this.haveError = true;
+        this.errorMessage = 'Please enter a valid email address.'
+        setTimeout(function () { this.haveError = false; }.bind(this), 3000)
+      }
     }
 
   },

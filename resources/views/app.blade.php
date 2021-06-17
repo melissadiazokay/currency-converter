@@ -7,12 +7,20 @@
 
     <div id="app" >
 
-        <modal :toggle="modalToggle" @modal-close="modalToggle = !modalToggle"></modal>
+        <login-modal :toggle="modalToggle" @modal-close="modalToggle = !modalToggle" @log-in-success="logInSuccess" ></login-modal>
 
         <div class="container-fluid hero">
 
-            <div v-show="!showLoginButton" class="text-right">
+            <div v-show="!loggedIn" class="text-right">
                 <button class="btn btn-invert mt-2" @click="modalToggle = !modalToggle">Login</button>
+            </div>
+
+            <div v-show="loggedIn" class="text-right pt-2">
+                
+                <div>Logged in as: <strong>{{loggedInEmail}}</strong></div>
+                <div><a class="link pointer" @click="modalToggle = !modalToggle">Use a different email</a></div>
+                <div><a class="pointer" @click="logout">Logout</a></div>
+
             </div>
 
             <div class="title"><h1>Currency Converter</h1></div>          
