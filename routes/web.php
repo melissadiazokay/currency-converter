@@ -18,11 +18,12 @@ use Illuminate\Support\Facades\Route;
 
 
 // API routes
-Route::post('/create', [ ConvertController::class, 'create' ]);
-Route::get('/delete/{id}', [ ConvertController::class, 'delete' ]);
+Route::get('/conversions/{email}', [ ConvertController::class, 'fetch' ]);
+Route::post('/save-conversion', [ ConvertController::class, 'create' ]);
+Route::get('/delete-conversion/{id}', [ ConvertController::class, 'delete' ]);
 
 // web page routes 
-Route::get('/login', [ HomeController::class, 'index' ])->name('login');
+Route::get('/test', [ HomeController::class, 'index' ])->name('test');
 
 // wildcard route for Vue js
 Route::get('/{wildcard?}', [ VueController::class, 'index' ])->where('wildcard', '(.*)')->name('app');

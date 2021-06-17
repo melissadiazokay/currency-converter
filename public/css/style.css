@@ -115,6 +115,16 @@ label {
     border-color: #11acea;
 }
 
+.btn.save-btn {
+    background-color: #36b350;
+    border: 2px solid #36b350;
+}
+.btn.save-btn:hover {
+    color: #fff;
+    background-color: #40ca5d;
+    border-color: #40ca5d;
+}
+
 .hero {
     height: 40vh;
     background-image: url('../assets/bg.png');
@@ -189,4 +199,8 @@ a.link {
 }
 .modal-title {
     color: #e6e6e6;
+}
+
+.text-very-muted {
+   color: #5b5b5b;
 }

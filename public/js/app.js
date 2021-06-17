@@ -15,7 +15,11 @@ const app = Vue.createApp({
       amountBaseCurrency: 1,
       modalToggle: false,
       loggedIn: false,
-      loggedInEmail: ''
+      loggedInEmail: '',
+      userConversions: [],
+      conversionSavedSuccess: false,
+      hideConversionSavedSuccess: false,
+      loading: true
     }
   },
 
@@ -25,7 +29,7 @@ const app = Vue.createApp({
 
       // const endpoint = 'https://swop.cx/rest/currencies?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6'
 
-       const endpoint = './assets/currencies.json';
+      const endpoint = './assets/currencies.json';
 
       const response = await fetch(endpoint);
       this.currencySymbols = await response.json();
@@ -62,6 +66,8 @@ const app = Vue.createApp({
             this.conversionResults.push(data);
             this.showResults = true;
             this.haveError = false;
+            this.conversionSavedSuccess = false;
+            this.hideConversionSavedSuccess = false;
 
           } else { // API error response
 
@@ -117,6 +123,9 @@ const app = Vue.createApp({
 
     removeQuoteCurrencyField(index){
 
+        const el = document.getElementById(`quote-currency-select-wrap-${index}`)
+        el.parentNode.removeChild(el);
+
         this.quoteCurrencyFields.splice(index, 1);
     },
 
@@ -134,6 +143,8 @@ const app = Vue.createApp({
       localStorage.setItem("loggedInEmail", loginSuccessObj.email);
       this.loggedInEmail = loginSuccessObj.email;
       this.loggedIn = true;
+      this.showResults = false;
+      this.getUserConversions();
     },
 
     checkLogin(){
@@ -142,7 +153,9 @@ const app = Vue.createApp({
       if(loggedInEmail) {
         this.loggedInEmail = loggedInEmail;
         this.loggedIn = true;
+        return true;
       }
+      return false;
     },
 
     logout(){
@@ -150,7 +163,61 @@ const app = Vue.createApp({
       localStorage.removeItem('loggedInEmail');
       this.loggedInEmail = '';
       this.loggedIn = false;
-    }
+    },
+
+    async getUserConversions(){
+
+      this.loading = true;
+      this.userConversions = [];
+
+      const response = await fetch(`/conversions/${this.loggedInEmail}`);
+      const data = await response.json();
+
+      data.reverse(); // reverse to show newest results first
+
+      for(let i=0; i < data.length; i++){
+        let conversion = JSON.parse(data[i].content);
+        conversion['id'] = data[i].id;
+        this.userConversions.push(conversion);
+      }
+
+      this.loading = false;
+      
+    },
+
+    async saveConversion(conversion){
+
+      const response = await fetch('/save-conversion', {
+        method: "post",
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `email=${this.loggedInEmail}&content=${JSON.stringify(conversion)}`
+      });
+
+      const res = await response.json();
+
+      if(res.status == 1){
+
+        this.conversionSavedSuccess = true;
+        this.getUserConversions()
+
+        setTimeout(function () {
+          this.hideConversionSavedSuccess = true;
+        }.bind(this), 4000)
+        
+      }
+    },
+
+    async deleteConversion(id){
+
+      const response = await fetch(`/delete-conversion/${id}`);
+      const res = await response.json();
+
+      if(res.status == 1){
+        this.getUserConversions()
+      }
+    },
 
   },
 
@@ -162,9 +229,11 @@ const app = Vue.createApp({
       
     console.log('app mounted')
 
-    this.checkLogin()
-    this.getCurrencySymbols()
+    if(this.checkLogin()){
+      this.getUserConversions();
+    }
 
+    this.getCurrencySymbols()
   },
   
 });

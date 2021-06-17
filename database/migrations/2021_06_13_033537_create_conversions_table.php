@@ -4,17 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateConversionsTable extends Migration
-{
+class CreateConversionsTable extends Migration {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
+
         Schema::create('conversions', function (Blueprint $table) {
             $table->id();
+            $table->string('email');
             $table->string('content');
             $table->timestamps();
         });
@@ -25,8 +25,8 @@ class CreateConversionsTable extends Migration
      *
      * @return void
      */ 
-    public function down()
-    {
+    public function down(){
+
         Schema::dropIfExists('conversions');
     }
 }
