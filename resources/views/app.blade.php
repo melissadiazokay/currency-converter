@@ -32,7 +32,7 @@
         <!-- Calculator -->
         <div class="container" :class="{ active: showResults }">
 
-            <div class="form-container pb-4 pt-3 px-3">
+            <div class="calculator-wrap pb-4 pt-3 px-3">
 
                 <div class="pl-1 pb-2" :class="{ invisible: !haveError && !haveWarning, 'text-danger': haveError, 'text-warning': haveWarning }" >{{errorMessage}}</div>
 
@@ -90,6 +90,10 @@
 
                     </div>
 
+                    <div v-if="conversionResults.length > 1" class="pt-3">
+                        <h5>Best rate: <strong>{{bestRate.quote_currency}} @ {{bestRate.quote.toFixed(3)}} / {{bestRate.base_currency}}</strong></h5>
+                    </div>
+ 
                     <button v-if="loggedIn && !conversionSavedSuccess" @click="saveConversion(conversionResults)" class="btn btn-invert save-btn mt-3">Save Conversion</button>
 
                     <div v-if="loggedIn && conversionSavedSuccess" :class="{ invisible: hideConversionSavedSuccess }"class="pt-3"style="color: #2ae350">Conversion saved!</div>
@@ -123,5 +127,10 @@
     @endverbatim
 
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/components/login-modal.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/components/search-select.js') }}"></script>
+    <script type="text/javascript">
+        const mountedApp = app.mount('#app');
+    </script>
     
 @endsection

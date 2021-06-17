@@ -11,7 +11,7 @@ label {
     color: #ddd;
 }
 
-.form-container {
+.calculator-wrap {
     background-color: #202020;
     border-radius: 10px;
     transition: height 300ms;
@@ -19,13 +19,6 @@ label {
     z-index: 2;
     position: relative;
     border: 1px solid #282828;
-}
-
-
-.content {
-    margin: 0 auto;
-    display: block;
-    width: 80vw;
 }
 
 .search-select {
@@ -94,7 +87,6 @@ label {
     min-width: auto;
 }
 
-/* custom invert button */
 .btn.btn-invert {
     color: #fdfdfd;
     border: 1px solid #fdfdfd;
@@ -125,6 +117,7 @@ label {
     border-color: #40ca5d;
 }
 
+
 .hero {
     height: 40vh;
     background-image: url('../assets/bg.png');
@@ -144,6 +137,7 @@ label {
     text-shadow: 2px 2px #174b9b;
 }
 
+
 .input-field {
     position: relative;
 }
@@ -156,10 +150,10 @@ label {
     top: 50%;
     transform: translateY(-50%);
 }
-.input-field input {
-    /*position: absolute;*/
-}
 
+.text-very-muted {
+   color: #5b5b5b;
+}
 
 a.link {
     color: #0ff0bb !important;
@@ -169,10 +163,7 @@ a.link {
 }
 
 
-
-
-
-/* modal */
+/* modal component */
 .modal {
     background-color: rgba(0,0,0,0.75);
     transition: opacity 300ms;
@@ -199,8 +190,4 @@ a.link {
 }
 .modal-title {
     color: #e6e6e6;
-}
-
-.text-very-muted {
-   color: #5b5b5b;
 }
