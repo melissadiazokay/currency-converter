@@ -105,15 +105,15 @@
         </div>
 
         <!-- User conversions -->
-        <div v-if="loggedIn && !loading" class="container mt-4 pl-4">
+        <div v-if="loggedIn && !loading" class="container mt-4 pb-5 pl-4">
 
             <h5 style="border-bottom: 1px solid #444; color:#d0d0d0;" class="pb-1">Your Saved Conversions</h5>
             
-            <div v-for="conversion in userConversions">
-                <div v-for="c in conversion" class="d-flex py-1">
-                   <div class="mr-auto">{{Math.round(c.computed_quote / c.quote)}} {{this.getSymbolName(c.base_currency)}} ({{c.base_currency}}) = {{c.computed_quote.toFixed(3)}} {{this.getSymbolName(c.quote_currency)}} ({{c.quote_currency}})</div>
-                   <span class="pointer" @click="deleteConversion(conversion.id)">&times;</span>
-                </div>
+            <div v-for="conversion in userConversions"class="d-flex py-1" >
+                
+                <div class="mr-auto">{{Math.round(conversion.computed_quote / conversion.quote)}} {{this.getSymbolName(conversion.base_currency)}} ({{conversion.base_currency}}) = {{conversion.computed_quote.toFixed(3)}} {{this.getSymbolName(conversion.quote_currency)}} ({{conversion.quote_currency}})</div>
+                <span class="pointer" @click="deleteConversion(conversion.id)">&times;</span>
+                
             </div>
 
             <div v-if="userConversions.length == 0" class="text-center mt-5 text-very-muted">

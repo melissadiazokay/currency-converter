@@ -29,7 +29,8 @@ const app = Vue.createApp({
 
       const endpoint = 'https://swop.cx/rest/currencies?api-key=108480aad9accf675fc2bd498fee338ae50501975086b897ba9fd5aa4caf9ef6'
 
-      // const endpoint = './assets/currencies.json';
+      // save response locally for development to avoid making repeated requests to API
+      // const endpoint = './assets/currencies.json'; 
 
       const response = await fetch(endpoint);
       this.currencySymbols = await response.json();
@@ -108,7 +109,7 @@ const app = Vue.createApp({
 
     async saveConversion(conversion){
 
-      const response = await fetch('/save-conversion', {
+      const request = await fetch('/save-conversion', {
         method: "post",
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -116,7 +117,7 @@ const app = Vue.createApp({
         body: `email=${this.loggedInEmail}&content=${JSON.stringify(conversion)}`
       });
 
-      const res = await response.json();
+      const res = await request.json();
 
       if(res.status == 1){
 

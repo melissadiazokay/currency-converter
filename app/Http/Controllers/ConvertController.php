@@ -14,13 +14,18 @@ class ConvertController extends Controller {
     }
 
     public function create(Request $request) {
+        
+        $email = $request->email;
+        $content = json_decode($request->content,true);
+        
+        foreach ($content as $C) {
 
-        $conversion = new Conversions();
+            $conversion = new Conversions();
+            $conversion->email = $email;
+            $conversion->content = json_encode($C);
 
-        $conversion->email = $request->email;
-        $conversion->content = $request->content;
-
-        $conversion->save();
+            $conversion->save();            
+        }
 
         return response()->json([
             'status' => 1,
