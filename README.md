@@ -16,6 +16,7 @@
 * Convert between a **base currency**** and up to 10 **quote currencies**.
 * Persist results to database and access by email address.
 * View the different exchange rates including best exchange rate among the chosen quote currencies.
+
 ** Due to [limits of API 'free tier'](https://swop.cx/pricing), the only base currency currently available is the **Euro (EUR)**
 
 ## Installation
